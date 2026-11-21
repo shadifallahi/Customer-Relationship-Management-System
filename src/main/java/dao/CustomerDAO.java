@@ -1,5 +1,4 @@
 
-
 package dao;
 
 import database.DatabaseConnection;
@@ -14,7 +13,7 @@ import java.util.List;
 
 public class CustomerDAO {
 
-    public void addCustomer(Customer customer) throws SQLException {
+    public boolean addCustomer(Customer customer) throws SQLException {
 
         String sql = """
             INSERT INTO customers
@@ -31,8 +30,35 @@ public class CustomerDAO {
             statement.setString(4, customer.getPhoneNumber());
             statement.setString(5, customer.getCompany());
 
-            statement.executeUpdate();
+            return statement.executeUpdate() > 0;
         }
+    }
+
+    public Customer getCustomerById(int customerId) throws SQLException {
+
+        String sql = "SELECT * FROM customers WHERE customer_id = ?";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, customerId);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+
+                if (resultSet.next()) {
+                    return new Customer(
+                        resultSet.getInt("customer_id"),
+                        resultSet.getString("first_name"),
+                        resultSet.getString("last_name"),
+                        resultSet.getString("email"),
+                        resultSet.getString("phone_number"),
+                        resultSet.getString("company")
+                    );
+                }
+            }
+        }
+
+        return null;
     }
 
     public List<Customer> getAllCustomers() throws SQLException {
@@ -46,7 +72,6 @@ public class CustomerDAO {
              ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {
-
                 Customer customer = new Customer(
                     resultSet.getInt("customer_id"),
                     resultSet.getString("first_name"),
@@ -63,7 +88,7 @@ public class CustomerDAO {
         return customers;
     }
 
-    public void updateCustomer(Customer customer) throws SQLException {
+    public boolean updateCustomer(Customer customer) throws SQLException {
 
         String sql = """
             UPDATE customers
@@ -78,11 +103,11 @@ public class CustomerDAO {
             statement.setString(2, customer.getPhoneNumber());
             statement.setInt(3, customer.getCustomerId());
 
-            statement.executeUpdate();
+            return statement.executeUpdate() > 0;
         }
     }
 
-    public void deleteCustomer(int customerId) throws SQLException {
+    public boolean deleteCustomer(int customerId) throws SQLException {
 
         String sql = "DELETE FROM customers WHERE customer_id = ?";
 
@@ -90,7 +115,8 @@ public class CustomerDAO {
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setInt(1, customerId);
-            statement.executeUpdate();
+
+            return statement.executeUpdate() > 0;
         }
     }
 }
