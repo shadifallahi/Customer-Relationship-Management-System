@@ -1,4 +1,5 @@
 
+
 package dao;
 
 import database.DatabaseConnection;
@@ -8,11 +9,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class InteractionDAO {
 
+    // Add a new interaction
     public void addInteraction(Interaction interaction)
             throws SQLException {
 
@@ -28,12 +31,13 @@ public class InteractionDAO {
             statement.setInt(1, interaction.getCustomerId());
             statement.setString(2, interaction.getInteractionType());
             statement.setString(3, interaction.getDescription());
-            statement.setString(4, interaction.getInteractionDate());
+            statement.setString(4, interaction.getInteractionDate().toString());
 
             statement.executeUpdate();
         }
     }
 
+    // Get all interactions
     public List<Interaction> getAllInteractions()
             throws SQLException {
 
@@ -52,7 +56,9 @@ public class InteractionDAO {
                     resultSet.getInt("customer_id"),
                     resultSet.getString("interaction_type"),
                     resultSet.getString("description"),
-                    resultSet.getString("interaction_date")
+                    LocalDateTime.parse(
+                        resultSet.getString("interaction_date")
+                    )
                 );
 
                 interactions.add(interaction);
@@ -62,6 +68,7 @@ public class InteractionDAO {
         return interactions;
     }
 
+    // Get interactions by customer ID
     public List<Interaction> getInteractionsByCustomerId(int customerId)
             throws SQLException {
 
@@ -86,7 +93,9 @@ public class InteractionDAO {
                         resultSet.getInt("customer_id"),
                         resultSet.getString("interaction_type"),
                         resultSet.getString("description"),
-                        resultSet.getString("interaction_date")
+                        LocalDateTime.parse(
+                            resultSet.getString("interaction_date")
+                        )
                     );
 
                     interactions.add(interaction);
