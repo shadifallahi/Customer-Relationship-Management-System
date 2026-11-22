@@ -1,4 +1,5 @@
 
+
 package service;
 
 import dao.CustomerDAO;
@@ -21,23 +22,28 @@ public class CustomerService {
 
     // Customer operations
 
-    public boolean addCustomer(Customer customer) {
+    public boolean addCustomer(Customer customer)
+            throws SQLException {
         return customerDAO.addCustomer(customer);
     }
 
-    public Customer getCustomerById(int customerId) {
+    public Customer getCustomerById(int customerId)
+            throws SQLException {
         return customerDAO.getCustomerById(customerId);
     }
 
-    public List<Customer> getAllCustomers() {
+    public List<Customer> getAllCustomers()
+            throws SQLException {
         return customerDAO.getAllCustomers();
     }
 
-    public boolean updateCustomer(Customer customer) {
+    public boolean updateCustomer(Customer customer)
+            throws SQLException {
         return customerDAO.updateCustomer(customer);
     }
 
-    public boolean deleteCustomer(int customerId) {
+    public boolean deleteCustomer(int customerId)
+            throws SQLException {
         return customerDAO.deleteCustomer(customerId);
     }
 
@@ -58,4 +64,3 @@ public class CustomerService {
         return interactionDAO.getInteractionsByCustomerId(customerId);
     }
 }
-
